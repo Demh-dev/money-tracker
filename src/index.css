@@ -1,9 +1,6 @@
 @import "tailwindcss";
 
 body {
-    background-color: rgb(50, 50, 50);
-}
-
-input {
-    background-color: white;
+    background-color: #2a2a2a;
+    color: white;
 }

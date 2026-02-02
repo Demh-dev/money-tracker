@@ -1,100 +1,34 @@
-import { useState } from 'react';
+import { modalTabsSx, modalTabSx, modalCloseButtonSx, modalCurrencyFormControlSx, modalCurrencyInputLabelSx, modalCurrencySelectSx, modalCurrencyMenuItemSx, modalAmountTypographySx, modalAmountTextFieldSx, modalMessagesSx, modalDatePickerTextFieldSx, modalDatePickerPopperSx, modalDatePickerLayoutSx, modalDatePickerYearButtonSx } from "./Modal.styles";
 import './Modal.css';
+
+import useModalForm from './useModalForm';
+import { currencies } from './currencies';
+
 import ClearIcon from '@mui/icons-material/Clear';
 import SendIcon from '@mui/icons-material/Send';
-import { FormControl, MenuItem, InputAdornment, Fab, TextField, InputLabel, Select, Button, Tabs, Tab, Alert, Stack } from '@mui/material';
+
+import { FormControl, MenuItem, InputAdornment, Fab, TextField, InputLabel, Select, Button, Tabs, Tab, Alert, Typography } from '@mui/material';
+
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-const currencies = [
-    { value: 'USD', label: '$', },
-    { value: 'EUR', label: '€', },
-    { value: "LPS", label: 'L' },
-];
-
 export default function Modal({ isOpen, onClose, onSubmit }) {
 
-    // 1. state
-    const [form, setForm] = useState({
-        type: "income",
-        currency: "LPS",
-        amount: "",
-        source: "cash",
-        date: null,
-    });
-    const [messages, setMessages] = useState({
-        amount: "",
-        date: ""
-    });
-
-    // 2. derived values
-    const selectedCurrency = currencies.find(prev => prev.value === form.currency)?.label;
-
-    // 3. helpers
-    const buildEntry = () => ({
-        ...form,
+    const {
+        form,
+        messages,
         selectedCurrency,
-        date: form.date?.format("YYYY-MM-DD")
-    });
-    const validateForm = () => {
-        const errors = {};
-
-        if (!form.amount) errors.amount = "Amount is required";
-        if (!form.date) errors.date = "Date is required";
-        
-        return errors;
-    };
-
-    // 4. handlers
-    const handleAmountChange = (e) => {
-        const value = e.target.value;
-
-        const cleaned = value
-            .replace(/[^0-9.]/g, '') //Keeps only digits and periods
-            .replace(/(\..*?)\..*/g, '$1') //Only one decimal point
-            .replace(/^(\d+)(\.\d{0,2})?.*$/, "$1$2") //Limit to 2 decimals
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ","); //Add commas
-
-        setForm(prev => ({ ...prev, amount: cleaned }));
-        setMessages(prev => ({
-            ...prev,
-            amount: ""
-        }));
-    };
-    const handleDateChange = (newValue) => {
-        setForm(prev => ({
-            ...prev,
-            date: newValue
-        }));
-
-        setMessages(prev => ({
-            ...prev,
-            date: ""
-        }));
-    };
-    const handleSend = () => {
-        const errors = validateForm()
-        setMessages(errors);
-        if (Object.keys(errors).length > 0) return;
-
-        onSubmit(buildEntry());
-        onClose();
-        resetForm();
-    };
-    const resetForm = () => {
-        setForm({
-            type: "income",
-            currency: "LPS",
-            amount: "",
-            source: "cash",
-            date: null,
-        });
-    };
+        handleTabValue,
+        handleSelectValue,
+        handleKeyDown,
+        handleAmountChange,
+        handleDateChange,
+        handleSend
+    } = useModalForm(onSubmit, onClose);
 
     if (!isOpen) return null;
 
-    // 5. return
     return (
         <div className="modal-overlay">
             <div
@@ -107,119 +41,148 @@ export default function Modal({ isOpen, onClose, onSubmit }) {
                 }}
                 tabIndex={0}
             >
-                <Fab
-                    color="primary"
-                    onClick={onClose}
-                >
-                    <ClearIcon/>
-                </Fab>
+                <div className="modal-header">
+                    <div className="modal-tabs">
+                        <Tabs
+                            value={form.type}
+                            onChange={(_event, newValue) => handleTabValue(newValue)}
+                            sx={modalTabsSx}
+                        >
+                            <Tab
+                                value="income"
+                                label="Income"
+                                sx={modalTabSx}
+                            />
+                            <Tab
+                                value="expense"
+                                label="Expense"
+                                sx={modalTabSx}
+                            />
+                        </Tabs>
+                    </div>
 
-                <Tabs
-                    value={form.type}
-                    onChange={(_event, newValue) => setForm(prev => 
-                        ({ ...prev, type: newValue }))}
-                >
-                    <Tab
-                        value="income"
-                        label="Income"
-                    />
-                    <Tab
-                        value="expense"
-                        label="Expense"
-                    />
-                </Tabs>
+                    <Fab
+                        className="modal-close"
+                        onClick={onClose}
+                        sx={modalCloseButtonSx}
+                    >
+                        <ClearIcon/>
+                    </Fab>
+                </div>
                 
-                <FormControl sx={{ width: 100 }}>
-                    <InputLabel id="currency-label">
-                        Currency
-                    </InputLabel>
-                    <Select
-                        labelId="currency-label"
-                        value={form.currency}
-                        onChange={(e) => setForm(prev => 
-                            ({ ...prev, currency: e.target.value }))}
+                <div className="modal-content">
+                    <FormControl
+                        sx={modalCurrencyFormControlSx}
                     >
-                        {currencies.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-
-                <TextField
-                    label="Amount"
-                    value={form.amount}
-                    onChange={handleAmountChange}
-                    placeholder="0.00"
-                    slotProps={{
-                        input: {
-                            startAdornment:
-                                <InputAdornment
-                                    position="start"
+                        <InputLabel
+                            id="currency-label"
+                            sx={modalCurrencyInputLabelSx}
+                        >
+                            Currency
+                        </InputLabel>
+                        <Select
+                            labelId="currency-label"
+                            value={form.currency}
+                            label="Currency"
+                            onChange={(e) => handleSelectValue(e.target.value)}
+                            MenuProps={{
+                                PaperProps: {
+                                    sx: modalCurrencySelectSx,
+                                },
+                            }}
+                        >
+                            {currencies.map((option) => (
+                                <MenuItem
+                                    key={option.value}
+                                    value={option.value}
+                                    sx={modalCurrencyMenuItemSx}
                                 >
-                                    {selectedCurrency}
-                                </InputAdornment>
-                        }
-                    }}
-                />
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
 
-                {messages.amount && (
-                <Stack>
-                    <Alert severity="info">
-                        {messages.amount}
-                    </Alert>
-                </Stack>
-                )}
+                    <div className="field-group">
+                        <TextField
+                            label="Amount"
+                            value={form.visualAmount}
+                            onKeyDown={handleKeyDown}
+                            onChange={handleAmountChange}
+                            placeholder="0.00"
+                            slotProps={{
+                                input: {
+                                    startAdornment:
+                                        <InputAdornment position="start">
+                                            <Typography
+                                                sx={modalAmountTypographySx}
+                                            >
+                                                {selectedCurrency}
+                                            </Typography>
+                                        </InputAdornment>
+                                }
+                            }}
+                            sx={modalAmountTextFieldSx}
+                        />
 
-                <FormControl sx={{ width: 100 }}>
-                    <InputLabel id="source-label">
-                        Source
-                    </InputLabel>
-                    <Select
-                        labelId="source-label"
-                        value={form.source}
-                        onChange={(e) => setForm(prev => 
-                            ({ ...prev, source: e.target.value }))}
+                        {messages.rawAmount && (
+                            <Alert
+                                severity="info"
+                                sx={modalMessagesSx}
+                            >
+                                {messages.rawAmount}
+                            </Alert>
+                        )}
+                    </div>
+                    
+                    <div className="field-group">
+                        <LocalizationProvider
+                            dateAdapter={AdapterDayjs}
+                        >
+                            <DatePicker
+                                label="Date"
+                                value={form.date}
+                                onChange={handleDateChange}
+                                slotProps={{
+                                    textField: {
+                                        sx: modalDatePickerTextFieldSx,
+                                    },
+
+                                    popper: {
+                                        sx: modalDatePickerPopperSx,
+                                    },
+
+                                    layout: {
+                                        sx: modalDatePickerLayoutSx,
+                                    },
+
+                                    yearButton: {
+                                        sx: modalDatePickerYearButtonSx,
+                                    },
+                                }}
+                            />
+                        </LocalizationProvider>
+
+                        {messages.date && (
+                            <Alert
+                                severity="info"
+                                sx={modalMessagesSx}
+                            >
+                                {messages.date}
+                            </Alert>
+                        )}
+                    </div>
+                </div>
+
+                <div className="modal-footer">
+                    <Button
+                        variant="contained"
+                        onClick={handleSend}
+                        endIcon={<SendIcon/>}
                     >
-                        <MenuItem
-                            value="cash"
-                        >
-                            Cash
-                        </MenuItem>
-                        <MenuItem
-                            value="bank"
-                        >
-                            Bank
-                        </MenuItem>
-                    </Select>
-                </FormControl>
-
-                <LocalizationProvider
-                    dateAdapter={AdapterDayjs}
-                >
-                    <DatePicker
-                        label="Date"
-                        value={form.date}
-                        onChange={handleDateChange}
-                    />
-                </LocalizationProvider>
-
-                {messages.date && (
-                <Stack>
-                    <Alert severity="info">
-                        {messages.date}
-                    </Alert>
-                </Stack>
-                )}
-
-                <Button
-                    variant="contained"
-                    onClick={handleSend}
-                    endIcon={<SendIcon />}
-                >
-                    Send
-                </Button>
+                        Send
+                    </Button>
+                </div>
             </div>
         </div>
     )

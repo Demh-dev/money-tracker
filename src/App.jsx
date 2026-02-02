@@ -1,4 +1,4 @@
-import MoneyTracker from './MoneyTracker'
+import MoneyTracker from './components/MoneyTracker/MoneyTracker'
 
 function App() {
 
@@ -6,7 +6,7 @@ function App() {
     <>
       <MoneyTracker/>
     </>
-  )
+  );
 }
 
 export default App
