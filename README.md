@@ -8,11 +8,10 @@ This project was created as a personal learning experiment using React and Vite.
 - Add entries with the following details:
   - Amount
   - Type: Expense or Income
-  - Payment Method: Bank or Cash
   - Date
 - View the entries on the main page
 
-> ⚠️ Note: This project is a work-in-progress and does not yet include a backend or CSS styling.
+> ⚠️ Note: This project is a work-in-progress and does not yet include a backend or CSS styling yet.
 
 ## Tech Stack
 
