@@ -1,0 +1,26 @@
+/* Confirm Modal */
+.confirm-box {
+    position: relative;
+
+    background: #303030;
+    color: #eaeaea;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+    padding: 2rem;
+
+    width: 95%;
+    max-width: 520px;
+    min-height: 100px;
+
+    border-radius: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+.buttons-layout {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+}

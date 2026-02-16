@@ -23,9 +23,50 @@ export const moneyTrackerHeaderSx = {
     borderBottom: "1px solid rgb(93, 93, 93)",
 };
 export const moneyTrackerAmountSx = {
-    fontSize: "1.5rem",
-    fontWeight: 400,
+    fontSize: "1.6rem",
+    fontWeight: 500,
     marginTop: "0.25rem",
+};
+
+// Accordion Component
+export const accordionSx = {
+    width: "100%",
+    backgroundColor: "#454545",
+    color: "#fff",
+    mb: 2,
+    boxShadow: "none",
+};
+
+// Accordion Header
+export const accordionSummarySx = {
+    px: 4,
+    py: 1.5,
+
+    fontWeight: 700,
+    fontSize: "1.2rem",
+
+    "&.Mui-expanded": {
+        minHeight: "unset",
+    },
+
+    "& .MuiAccordionSummary-content": {
+        margin: 0,
+    },
+
+    "& .MuiAccordionSummary-content.Mui-expanded": {
+        margin: 0,
+    },
+
+    "&:hover": {
+        backgroundColor: "#3e3e3e",
+    },
+};
+
+// Accordion Body
+export const accordionDetailsSx = {
+    px: 0,
+    py: 2,
+    backgroundColor: "#5b5b5b",
 };
 
 // Entry Card Container
@@ -82,4 +123,37 @@ export const entryAmountTextSx = {
 // Entry Date
 export const entryDateTextSx = {
     color: "#b0b0b0",
+};
+
+// Entry Monthly Amounts
+export const entryMonthlyAmountBoxSx = {
+    display: "flex",
+    alignItems: "center",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
+
+    gap: "2rem",
+
+    padding: "1rem 2rem",
+    marginTop: "2rem",
+};
+export const entryMonthlyIncomeAmountSx = {
+    color: "#1bd321",
+};
+export const entryMonthlyExpensesAmountSx = {
+    color: "#d23118",
+};
+export const entryMonthlyNetWorthAmountSx = {
+    color: "#FFFFFF",
+};
+
+// Deletion Cancel Button
+export const DeletionCancelButton = {
+    borderColor: "#444",
+    color: "#bbb",
+
+    "&:hover": {
+        borderColor: "#444",
+        backgroundColor: "rgba(255, 255, 255, 0.05)",
+    }, 
 };

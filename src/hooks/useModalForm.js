@@ -1,16 +1,18 @@
 import { useState } from 'react';
-import { currencies } from './currencies';
+import { currencies } from '../utils/Currencies';
 
 export default function useModalForm(onSubmit, onClose) {
     
     // 1. state
-    const [form, setForm] = useState({
+    const initialFormState = {
         type: "income",
         currency: "LPS",
         visualAmount: "",
         rawAmount: "",
         date: null,
-    });
+    };
+    const [form, setForm] = useState(initialFormState);
+
     const [messages, setMessages] = useState({
         rawAmount: "",
         date: ""
@@ -114,15 +116,7 @@ export default function useModalForm(onSubmit, onClose) {
         setMessages(prev => ({ ...prev, date: "" }));
     };
 
-    const resetForm = () => {
-        setForm({
-            type: "income",
-            currency: "LPS",
-            visualAmount: "",
-            rawAmount: "",
-            date: null,
-        });
-    };
+    const resetForm = () => setForm(initialFormState);
 
     const handleSend = () => {
         const errors = validateForm()
