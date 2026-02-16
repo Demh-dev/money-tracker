@@ -51,10 +51,6 @@
     position: static;
 }
 
-.modal-close {
-    position: static;
-}
-
 /* Body */
 .modal-content {
     flex: 1;

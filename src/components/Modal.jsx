@@ -1,8 +1,8 @@
-import { modalTabsSx, modalTabSx, modalCloseButtonSx, modalCurrencyFormControlSx, modalCurrencyInputLabelSx, modalCurrencySelectSx, modalCurrencyMenuItemSx, modalAmountTypographySx, modalAmountTextFieldSx, modalMessagesSx, modalDatePickerTextFieldSx, modalDatePickerPopperSx, modalDatePickerLayoutSx, modalDatePickerYearButtonSx } from "./Modal.styles";
-import './Modal.css';
+import * as styles from "../styles/Modal.styles";
+import '../styles/Modal.css';
 
-import useModalForm from './useModalForm';
-import { currencies } from './currencies';
+import useModalForm from '../hooks/useModalForm';
+import { currencies } from '../utils/Currencies';
 
 import ClearIcon from '@mui/icons-material/Clear';
 import SendIcon from '@mui/icons-material/Send';
@@ -46,25 +46,24 @@ export default function Modal({ isOpen, onClose, onSubmit }) {
                         <Tabs
                             value={form.type}
                             onChange={(_event, newValue) => handleTabValue(newValue)}
-                            sx={modalTabsSx}
+                            sx={styles.modalTabsSx}
                         >
                             <Tab
                                 value="income"
                                 label="Income"
-                                sx={modalTabSx}
+                                sx={styles.modalTabSx}
                             />
                             <Tab
                                 value="expense"
                                 label="Expense"
-                                sx={modalTabSx}
+                                sx={styles.modalTabSx}
                             />
                         </Tabs>
                     </div>
 
                     <Fab
-                        className="modal-close"
                         onClick={onClose}
-                        sx={modalCloseButtonSx}
+                        sx={styles.modalCloseButtonSx}
                     >
                         <ClearIcon/>
                     </Fab>
@@ -72,11 +71,11 @@ export default function Modal({ isOpen, onClose, onSubmit }) {
                 
                 <div className="modal-content">
                     <FormControl
-                        sx={modalCurrencyFormControlSx}
+                        sx={styles.modalCurrencyFormControlSx}
                     >
                         <InputLabel
                             id="currency-label"
-                            sx={modalCurrencyInputLabelSx}
+                            sx={styles.modalCurrencyInputLabelSx}
                         >
                             Currency
                         </InputLabel>
@@ -87,7 +86,7 @@ export default function Modal({ isOpen, onClose, onSubmit }) {
                             onChange={(e) => handleSelectValue(e.target.value)}
                             MenuProps={{
                                 PaperProps: {
-                                    sx: modalCurrencySelectSx,
+                                    sx: styles.modalCurrencySelectSx,
                                 },
                             }}
                         >
@@ -95,7 +94,7 @@ export default function Modal({ isOpen, onClose, onSubmit }) {
                                 <MenuItem
                                     key={option.value}
                                     value={option.value}
-                                    sx={modalCurrencyMenuItemSx}
+                                    sx={styles.modalCurrencyMenuItemSx}
                                 >
                                     {option.label}
                                 </MenuItem>
@@ -115,20 +114,20 @@ export default function Modal({ isOpen, onClose, onSubmit }) {
                                     startAdornment:
                                         <InputAdornment position="start">
                                             <Typography
-                                                sx={modalAmountTypographySx}
+                                                sx={styles.modalAmountTypographySx}
                                             >
                                                 {selectedCurrency}
                                             </Typography>
                                         </InputAdornment>
                                 }
                             }}
-                            sx={modalAmountTextFieldSx}
+                            sx={styles.modalAmountTextFieldSx}
                         />
 
                         {messages.rawAmount && (
                             <Alert
                                 severity="info"
-                                sx={modalMessagesSx}
+                                sx={styles.modalMessagesSx}
                             >
                                 {messages.rawAmount}
                             </Alert>
@@ -145,19 +144,19 @@ export default function Modal({ isOpen, onClose, onSubmit }) {
                                 onChange={handleDateChange}
                                 slotProps={{
                                     textField: {
-                                        sx: modalDatePickerTextFieldSx,
+                                        sx: styles.modalDatePickerTextFieldSx,
                                     },
 
                                     popper: {
-                                        sx: modalDatePickerPopperSx,
+                                        sx: styles.modalDatePickerPopperSx,
                                     },
 
                                     layout: {
-                                        sx: modalDatePickerLayoutSx,
+                                        sx: styles.modalDatePickerLayoutSx,
                                     },
 
                                     yearButton: {
-                                        sx: modalDatePickerYearButtonSx,
+                                        sx: styles.modalDatePickerYearButtonSx,
                                     },
                                 }}
                             />
@@ -166,7 +165,7 @@ export default function Modal({ isOpen, onClose, onSubmit }) {
                         {messages.date && (
                             <Alert
                                 severity="info"
-                                sx={modalMessagesSx}
+                                sx={styles.modalMessagesSx}
                             >
                                 {messages.date}
                             </Alert>
