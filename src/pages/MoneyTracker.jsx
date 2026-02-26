@@ -5,43 +5,43 @@ import { Box, Typography } from "@mui/material";
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 
-import Modal from '../components/Modal.jsx';
-import EntryList from '../components/EntryList.jsx';
-import ConfirmDeletion from '../components/ConfirmDeletion.jsx';
+import TransactionModal from '../components/transaction-modal/TransactionModal.jsx';
+import EntryList from '../components/entry-list/EntryList.jsx';
+import ConfirmDeletion from '../components/confirm-deletion/ConfirmDeletion.jsx';
 
 import useEntries from '../hooks/useEntries.js';
 
-import Formatter from '../utils/Formatter.js';
+import FormatterAmount from '../utils/FormatterAmount.js';
 
-import { moneyTrackerAddFabSx, moneyTrackerHeaderSx, moneyTrackerAmountSx } from '../styles/MoneyTracker.styles.js';
+import { moneyTrackerAddFabSx, moneyTrackerHeaderSx, moneyTrackerAmountSx } from './MoneyTracker.styles.js';
 
 function MoneyTracker() {
 
     const [isOpen, setIsOpen] = useState(false);
+    const handleOpenModal = () => setIsOpen(true);
+    const handleCloseModal = () => setIsOpen(false);
 
     const {
         total,
         grouped,
         sortedMonths,
         handleNewEntry,
-        handleDeleteEntry,
-        setIdToDelete,
+        requestDelete,
+        confirmDelete,
+        cancelDelete,
         isConfirmOpen,
-        setIsConfirmOpen
     } = useEntries();
 
     return (
         <div>
-            <header>
-                <Box sx={moneyTrackerHeaderSx}>
-                    <Typography sx={moneyTrackerAmountSx}>
-                        Total Revenue: L{Formatter(total)}
-                    </Typography>
-                </Box>
-            </header>
+            <Box sx={moneyTrackerHeaderSx}>
+                <Typography sx={moneyTrackerAmountSx}>
+                    Total Revenue: L{FormatterAmount(total)}
+                </Typography>
+            </Box>
 
             <Fab
-                onClick={() => setIsOpen(true)}
+                onClick={handleOpenModal}
                 sx={moneyTrackerAddFabSx}
             >
                 <AddIcon/>
@@ -50,20 +50,19 @@ function MoneyTracker() {
             <EntryList
                 sortedMonths={sortedMonths}
                 grouped={grouped}
-                setIsConfirmOpen={setIsConfirmOpen}
-                setIdToDelete={setIdToDelete}
+                requestDelete={requestDelete}
             />
 
-            <Modal
+            <TransactionModal
                 isOpen={isOpen}
-                onClose={() => setIsOpen(false)}
+                onClose={handleCloseModal}
                 onSubmit={handleNewEntry}
             />
 
             <ConfirmDeletion
                 isConfirmOpen={isConfirmOpen}
-                handleDeleteEntry={handleDeleteEntry}
-                setIsConfirmOpen={setIsConfirmOpen}
+                onConfirm={confirmDelete}
+                onCancel={cancelDelete}
             />
         </div>
     );

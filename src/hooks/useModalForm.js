@@ -1,102 +1,113 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { currencies } from '../utils/Currencies';
+
+// constants
+
+const INITIAL_FORM_STATE = {
+    type: "income",
+    currency: "LPS",
+    visualAmount: "",
+    rawAmount: "",
+    date: null,
+};
 
 export default function useModalForm(onSubmit, onClose) {
     
-    // 1. state
-    const initialFormState = {
-        type: "income",
-        currency: "LPS",
-        visualAmount: "",
-        rawAmount: "",
-        date: null,
-    };
-    const [form, setForm] = useState(initialFormState);
-
+    // state
+    const [form, setForm] = useState(INITIAL_FORM_STATE);
     const [messages, setMessages] = useState({
         rawAmount: "",
         date: ""
     });
 
-    // 2. Derived values
-    const selectedCurrency = currencies.find(c => c.value === form.currency)?.label;
+    // derived data
+    const selectedCurrency = useMemo(() => {
+        return currencies.find(c => c.value === form.currency)?.label;
+    }, [form.currency]);
 
-    // 3. helpers
+    // helpers
+    const cleanRawAmount = (value) => {
+        return value
+            .replace(/,/g, "") // remove commas first
+            .replace(/[^0-9.]/g, "") // digits + dot
+            .replace(/(\..*)\./g, "$1") // only one dot
+            .replace(/^(\d+)(\.\d{0,2})?.*$/, "$1$2"); // only two numbers after dot
+    };
+
+    const formatWithCommas = (value) => {
+        if (value === "") return "";
+
+        const [integer, decimal] = value.split(".");
+
+        const formattedInt = integer ? Number(integer).toLocaleString("en-US") : "0";
+
+        return decimal != null
+            ? `${formattedInt}.${decimal}`
+            : formattedInt;
+    };
+
+    const adjustCursor = (e, value, formatted) => {
+        const diff = formatted.length - value.length;
+        const newCursorPos = e.target.selectionStart + diff;
+        requestAnimationFrame(() => {
+            e.target.setSelectionRange(newCursorPos, newCursorPos);
+        });
+    };
+
     const buildEntry = () => ({
         ...form,
         selectedCurrency,
         rawAmount: Number(form.rawAmount),
         date: form.date?.format("YYYY-MM-DD")
     });
-    const validateForm = () => {
+
+    const validateAndSetMessages = () => {
         const errors = {};
+        const amount = Number(form.rawAmount);
 
-        if (!form.rawAmount) errors.rawAmount = "Amount is required";
-        if (!form.date) errors.date = "Date is required";
-        
-        return errors;
+        if (!form.rawAmount || isNaN(amount) || Number(amount <= 0)) {
+            errors.rawAmount = "Enter a valid amount";
+        }
+
+        if (!form.date || !form.date.isValid?.()) {
+            errors.date = "Enter a valid date";
+        }
+
+        setMessages(errors);
+        return Object.keys(errors).length === 0;
     };
 
-    // 4. handlers
-    const handleTabValue = (newValue) => {
-        setForm(prev => ({
-            ...prev,
-            type: newValue,
-        }));
-    };
-
-    const handleSelectValue = (newValue) => {
-        setForm(prev => ({
-            ...prev,
-            currency: newValue,
-        }));
-    };
-
-    const formatWithCommas = (value) => {
-        if (!value) return "";
-
-        const [integer, decimal] = value.split(".");
-
-        const formattedInt = Number(integer).toLocaleString("en-US");
-
-        return decimal !== undefined
-            ? `${formattedInt}.${decimal}`
-            : formattedInt;
-    };
-
+    // handlers
     const handleKeyDown = (e) => {
-        const input = e.target;
-        const value = input.value;
-        const cursorPos = input.selectionStart;
-        const key = e.key;
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+        }
+    };
 
-        const isNumber = /^[0-9]$/.test(key);
-        const containsDot = value.includes(".");
+    const handleTabValue = (type) => setForm(prev => ({ ...prev, type: type }));
 
-        if (containsDot) {
-            const [, decimals] = value.split(".");
-            const dotIndex = value.indexOf(".");
+    const handleSelectValue = (currency) => setForm(prev => ({ ...prev, currency: currency }));
 
-            if (cursorPos > dotIndex && decimals.length === 2 && isNumber) {
-                e.preventDefault();
-            };
+    const handleAmountKeyDown = (e) => {
+        const { value, selectionStart: cursorPos } = e.target;
+        const { key } = e;
+        if (!/^[0-9]$/.test(key)) return;
+
+        const dotIndex = value.indexOf(".");
+        if (dotIndex === -1) return;
+
+        const decimals = value.slice(dotIndex + 1);
+        if (cursorPos > dotIndex && decimals.length >= 2) {
+            e.preventDefault();
         };
     };
 
     const handleAmountChange = (e) => {
-        const input = e.target;
-        const cursorPos = input.selectionStart;
+        const { value } = e.target;
 
-        const raw = input.value
-            .replace(/,/g, "") // remove commas first
-            .replace(/[^0-9.]/g, "") // digits + dot
-            .replace(/(\..*)\./g, "$1") // only one dot
-            .replace(/^(\d+)(\.\d{0,2})?.*$/, "$1$2"); // only two numbers after dot
-
+        const raw = cleanRawAmount(value);
         const formatted = formatWithCommas(raw);
-
-        const diff = formatted.length - input.value.length;
-        const newCursorPos = cursorPos + diff;
 
         setForm(prev => ({
             ...prev,
@@ -104,10 +115,7 @@ export default function useModalForm(onSubmit, onClose) {
             visualAmount: formatted,
         }));
 
-        requestAnimationFrame(() => {
-            input.setSelectionRange(newCursorPos, newCursorPos);
-        });
-
+        adjustCursor(e, value, formatted);
         setMessages(prev => ({ ...prev, rawAmount: "" }));
     };
 
@@ -116,27 +124,36 @@ export default function useModalForm(onSubmit, onClose) {
         setMessages(prev => ({ ...prev, date: "" }));
     };
 
-    const resetForm = () => setForm(initialFormState);
+    const resetForm = () => {
+        setForm(INITIAL_FORM_STATE);
+        setMessages({ rawAmount: "", date: "" });
+    };
 
     const handleSend = () => {
-        const errors = validateForm()
-        setMessages(errors);
-        if (Object.keys(errors).length > 0) return;
+        if (!validateAndSetMessages()) return;
 
         onSubmit(buildEntry());
         onClose();
         resetForm();
     };
 
+    // public API
+
     return {
+        // states
         form,
         messages,
+
+        // derived data
         selectedCurrency,
+
+        // handlers
         handleTabValue,
         handleSelectValue,
-        handleKeyDown,
+        handleAmountKeyDown,
         handleAmountChange,
         handleDateChange,
+        handleKeyDown,
         handleSend
     };
 }
