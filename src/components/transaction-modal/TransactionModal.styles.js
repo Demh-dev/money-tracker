@@ -1,3 +1,48 @@
+// Modal Overlay and Box
+export const modalOverlaySx = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+
+    position: "fixed",
+    inset: 0,
+    zIndex: "1300",
+
+    background: "rgba(0, 0, 0, 0.6)",
+    backdropFilter: "blur(2px)",
+};
+export const modalBoxSx = {
+    position: "relative",
+    display: "flex",
+    flexDirection: "column",
+
+    background: "#1e1e1e",
+    color: "#eaeaea",
+    boxShadow: "0 0 40px rgba(0, 0, 0, 0.6)",
+    padding: "2rem",
+    paddingTop: "5rem",
+    borderRadius: "16px",
+
+    width: "95%",
+    maxWidth: "520px",
+    minHeight: "420px",
+};
+
+// Modal Header
+export const modalHeaderSx = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    position: "absolute",
+
+    top: "0",
+    left: "0",
+    padding: "1rem 1rem",
+
+    width: "100%",
+    borderBottom: "1px solid #2a2a2a",
+};
+
 // Tabs
 export const modalTabsSx = {
     "& .MuiTabs-indicator": {
@@ -19,6 +64,21 @@ export const modalCloseButtonSx = {
         backgroundColor: "#484848",
         color: "#fbfbfb",
     },
+};
+
+// Modal Content
+export const modalContentSx = {
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
+
+    padding: "1.5rem",
+    gap: "1.25rem",
+};
+export const modalFieldGroupSx = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.5rem",
 };
 
 // Currency Select
@@ -232,5 +292,20 @@ export const modalDatePickerYearButtonSx = {
 
     "&[aria-current='date']": {
         backgroundColor: "#2a2a2a",
+    },
+};
+
+// Modal Footer
+export const modalFooterSx = {
+    display: "flex",
+    justifyContent: "flex-start",
+};
+export const modalSendButtonSx = {
+    backgroundColor: "#f5c518",
+    color: "#111",
+    fontWeight: "500",
+
+    "&:hover": {
+        backgroundColor: "#e0b400",
     },
 };
