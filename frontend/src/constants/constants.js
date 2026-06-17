@@ -8,7 +8,7 @@ import moneyTrackerTablet_02 from '@/projects-images/moneyTrackerTabletImg_02.pn
 import moneyTrackerMobile_01 from '@/projects-images/moneyTrackerMobileImg_01.png';
 import moneyTrackerMobile_02 from '@/projects-images/moneyTrackerMobileImg_02.png';
 
-export const API_URL = 'http://192.168.2.19:3000';
+export const API_URL = 'http://localhost:3000';
 
 export const MENU_PHRASES = [
     "Made with React and TONS of caffeine! ☕",
