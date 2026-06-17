@@ -34,6 +34,6 @@ This project is actively evolving. Some things still on my list:
 
 ## About This Project
 
-I'm self-taught and have been learning web development on my own for about two years. This is my first large full-stack project, and I've used it to learn — and in some cases relearn properly — concepts like component architecture, responsive design, and authentication security (this project originally used `localStorage` for tokens before being migrated to HttpOnly cookies).
+This is my first large full-stack project, and I've used it to learn — and in some cases relearn properly — concepts like component architecture, responsive design, and authentication security (this project originally used `localStorage` for tokens before being migrated to HttpOnly cookies).
 
 Feedback is very welcome.
