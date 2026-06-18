@@ -31,3 +31,9 @@ This project is actively evolving. Some things still on my list:
 - Deploying the app live (currently runs locally)
 - More projects to add to the portfolio carousel
 - General polish and edge-case handling
+
+## About This Project
+
+This is my first large full-stack project, and I've used it to learn — and in some cases relearn properly — concepts like component architecture, responsive design, and authentication security (this project originally used `localStorage` for tokens before being migrated to HttpOnly cookies).
+
+Feedback is very welcome.
