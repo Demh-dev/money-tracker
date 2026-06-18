@@ -1,6 +1,6 @@
 # Portfolio
 
-A personal portfolio site built with React, MUI, and GSAP, showcasing my development projects. This repo is a work in progress — I'm a self-taught developer building this as both a learning exercise and a real showcase of what I can build.
+A personal portfolio site built with React, MUI, and GSAP, showcasing my development projects. This repo is a work in progress — I'm a self-taught developer building this as both a learning exercise and a real showcase of what I can build. You can check out a preview from this link: https://youtu.be/Q_tYQSbMGuU
 
 ## Live Projects
 
