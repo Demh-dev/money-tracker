@@ -1,20 +1,33 @@
-# Simple Expense Tracker (React + Vite)
+# Portfolio
 
-A simple React frontend application to track expenses and income.  
-This project was created as a personal learning experiment using React and Vite.
+A personal portfolio site built with React, MUI, and GSAP, showcasing my development projects. This repo is a work in progress — I'm a self-taught developer building this as both a learning exercise and a real showcase of what I can build. You can see a preview at this link: https://youtu.be/Q_tYQSbMGuU
 
-## Features
+## Live Projects
 
-- Add entries with the following details:
-  - Amount
-  - Type: Expense or Income
-  - Date
-- View the entries on the main page
+### Money Tracker
+A full-stack expense and income tracker, featured directly inside the portfolio's projects carousel with live device previews (laptop, tablet, mobile).
 
-> ⚠️ Note: This project is a work-in-progress and does not yet include a backend or CSS styling yet.
+**Features:**
+- User registration and login with secure, HttpOnly cookie-based authentication (JWT under the hood)
+- Add, view, and delete income/expense entries, grouped by month
+- Monthly and overall income/expense/net balance summaries
+- Fully responsive dark-themed UI
 
-## Tech Stack
+**Stack:**
+- Frontend: React, Vite, MUI (Material UI)
+- Backend: Node.js, Express, MySQL
+- Auth: JWT stored in HttpOnly cookies (not localStorage), with React Context for client-side auth state
 
-- React
-- Vite
-- JavaScript (no TypeScript)
+## Project Structure
+
+```
+/frontend   → React + Vite portfolio and Money Tracker UI
+/backend    → Express API, MySQL queries, auth logic
+```
+
+## Status
+
+This project is actively evolving. Some things still on my list:
+- Deploying the app live (currently runs locally)
+- More projects to add to the portfolio carousel
+- General polish and edge-case handling
